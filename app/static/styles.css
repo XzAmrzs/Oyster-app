@@ -1,0 +1,112 @@
+.profile-thumbnail {
+    position: absolute;
+}
+.profile-header {
+    min-height: 260px;
+    margin-left: 280px;
+}
+
+.bs-nav
+{
+    background-color: #209e85;
+    margin-bottom: 10px;
+}
+
+.bs-nav a,li{
+    color: #c9e6e0 !important;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+.navbar-header
+{
+    width: 100px;
+    margin-top: 5px;
+    margin-left: 0;
+}
+
+.bs-logo img
+{
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    vertical-align: middle;
+}
+
+main
+{
+    padding-top: 30px;
+    background-color: rgb(238, 238, 238);
+    min-height: 1000px;
+}
+
+.card
+{
+    width: 100%;
+    box-shadow: #CCC 2px 2px 8px;
+    border-radius: 10px;
+    overflow:hidden;
+}
+
+.card .plan
+{
+    background-color: white;
+    min-height: 108px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.plan p
+{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 35px;
+    word-wrap: break-word;
+    line-height: 100px;
+}
+
+.plan a{
+    position: relative;
+    float: right;
+}
+
+.speed
+{
+    background-color: rgb(238, 238, 238);
+    min-height: 158px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.speed .row
+{
+    margin:10px;
+    min-height: 60px;
+    line-height: 60px;
+}
+
+.bs-num
+{
+    font-size: 35px;
+    font-weight: bold;
+    color: #209e85;
+}
+
+.bs-text
+{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+
+hr{
+    margin: 18px;
+    border-top: 1px solid #ccc;
+}
+
+.bs-go
+{
+    line-height: 30px;
+    color: #7c8a8a;
+    font-size: 20px;
+    text-align: center;
+}
