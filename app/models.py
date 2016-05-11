@@ -1,3 +1,4 @@
+# coding=utf-8
 from datetime import datetime
 import hashlib
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -62,6 +63,14 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
+    # shanbay修改
+    # timezone = db.Column(db.String(32))
+    rank = db.Column(db.Integer, default=0)
+    word_totals = db.Column(db.Integer, default=50)
+    # study_times = db.Column(db.Integer, default=5)
+    level = db.Column(db.Integer, default=0)
+    auto_voice = db.Column(db.Integer, default=0)
+    notes = db.relationship('Note', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -72,7 +81,7 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(default=True).first()
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(
-                self.email.encode('utf-8')).hexdigest()
+                    self.email.encode('utf-8')).hexdigest()
 
     @property
     def password(self):
@@ -136,13 +145,13 @@ class User(UserMixin, db.Model):
             return False
         self.email = new_email
         self.avatar_hash = hashlib.md5(
-            self.email.encode('utf-8')).hexdigest()
+                self.email.encode('utf-8')).hexdigest()
         db.session.add(self)
         return True
 
     def can(self, permissions):
         return self.role is not None and \
-            (self.role.permissions & permissions) == permissions
+               (self.role.permissions & permissions) == permissions
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
@@ -157,12 +166,58 @@ class User(UserMixin, db.Model):
         else:
             url = 'http://www.gravatar.com/avatar'
         hash = self.avatar_hash or hashlib.md5(
-            self.email.encode('utf-8')).hexdigest()
+                self.email.encode('utf-8')).hexdigest()
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
-            url=url, hash=hash, size=size, default=default, rating=rating)
+                url=url, hash=hash, size=size, default=default, rating=rating)
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class Word(db.Model):
+    __tablename__ = 'words'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(64), unique=True, index=True)
+    rank = db.Column(db.String(64), unique=True, index=True)
+    USA_voice = db.Column(db.String(128))
+    UK_voice = db.Column(db.String(128))
+    eg = db.Column(db.String(128))
+    translations = db.Column(db.Text())
+    # words表和notes表的一对多关系
+    notes = db.relationship('Note', backref='word', lazy='dynamic')
+
+    # 同义词功能还没有想好要怎么实现
+    # synonym = db.Column(db.Text())
+
+    def __repr__(self):
+        return '<words %r>' % self.content
+
+
+class User_Word(db.Model):
+    __tablename__ = 'user_word'
+    id = db.Column(db.Integer, primary_key=True)
+    word_id = db.Column(db.Integer, db.ForeignKey('words.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    level = db.Column(db.Integer, default=0)
+
+    def __repr__(self):
+        return '<user_word %r %r>' % (self.word_id, self.user_id)
+
+
+class Note(db.Model):
+    __tablename__ = 'notes'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(64), unique=True, index=True)
+    like_counts = db.Column(db.Integer, default=0)
+    dislike_counts = db.Column(db.Integer, default=0)
+    timestamp = db.Column(db.DateTime(64), index=True, default=datetime.utcnow)
+    # 协管员通过这个查禁不当评论
+    disabled = db.Column(db.BOOLEAN)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    word_id = db.Column(db.Integer, db.ForeignKey('words.id'))
+
+    def __repr__(self):
+        return '<notes %r>' % self.body
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -171,6 +226,7 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_administrator(self):
         return False
+
 
 login_manager.anonymous_user = AnonymousUser
 

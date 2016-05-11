@@ -12,4 +12,43 @@ This repository contains the source code for my shanbay interview using `Flask` 
 
 我们会非常认真得阅读你的代码，在后续的沟通中我们将基于你的代码来讨论，如果你在开发过程中有什么问题，可以和我们沟通。
 
- 
+## usage:
+Install the requirements
+```
+(venv)$ pip install -r requirements.txt    
+```
+Init database
+```
+(venv)$ python manage.py shell
+db.create_all()
+```
+Run
+```
+python manage.py runserver
+```
+
+**TODO LIST**：
+
+- [x] 用户信息设置
+    - [x] 电子邮件设置
+    - [x] 密码重置 
+    - [x] 昵称 
+    - [x] 时区
+    - [x] 个人简介
+    - [x] 邮件确认
+- [x] 背单词设置 
+    - [x] 每日学习量
+    - [x] 单词难度
+    - [x] 单词的目标掌握程度
+    - [x] 自动发音模式
+- [] 背单词功能
+    - [] 查看解释
+    - [] 查看例句
+    - [] 查看发音
+    - [] 查看同义词(两个)
+- [] 笔记功能
+    - [] 我的笔记
+    - [] 添加笔记
+    - [] 查看其他用户笔记
+    
+    

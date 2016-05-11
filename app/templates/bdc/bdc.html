@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}扇贝网，英语听说读写和词汇，我们都能帮到你 扇贝英语{% endblock %}
+
+{% block page_content %}
+<ul class="nav nav-pills bs-pill">
+  <li role="presentation"><a href="{{ url_for('main.bdc') }}">单词学习</a></li>
+  <li role="presentation"><a href="{{ url_for('main.bdc_settings') }}">单词设置</a></li>
+</ul>
+{% endblock %}

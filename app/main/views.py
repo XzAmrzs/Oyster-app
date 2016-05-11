@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, abort, flash
 from flask.ext.login import login_required, current_user
 from . import main
-from .forms import EditProfileForm, EditProfileAdminForm
+from .forms import EditProfileForm, EditProfileAdminForm, BDCSettingsForm
 from .. import db
 from ..models import Role, User
 from ..decorators import admin_required
@@ -17,7 +17,7 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('user.html', user=user)
 
-@main.route('/bdc', methods=['GET', 'POST'])
+@main.route('/bdc/review', methods=['GET', 'POST'])
 @login_required
 def bdc():
     # form = EditProfileForm()
@@ -31,7 +31,26 @@ def bdc():
     # form.name.data = current_user.name
     # form.location.data = current_user.location
     # form.about_me.data = current_user.about_me
-    return render_template('bdc.html')
+    return render_template('bdc/review.html')
+
+
+@main.route('/bdc/settings', methods=['GET', 'POST'])
+@login_required
+def bdc_settings():
+    form = BDCSettingsForm()
+    if form.validate_on_submit():
+        current_user.word_totals = form.word_totals.data
+        current_user.rank = form.rank.data
+        current_user.level = form.level.data
+        current_user.auto_voice = form.auto_voice
+        db.session.add(current_user)
+        flash('Your profile has been updated.')
+        return redirect(url_for('.user', username=current_user.username))
+    form.word_totals.data = current_user.word_totals
+    form.rank.data = current_user.rank
+    form.level.data = current_user.level
+    form.auto_voice.data = current_user.auto_voice
+    return render_template('bdc/bdc_settings.html', form=form)
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
