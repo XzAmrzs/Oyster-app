@@ -1,8 +1,54 @@
 {% extends "bdc/bdc.html" %}
-
+{% import "bootstrap/wtf.html" as wtf %}
 {% block title %}扇贝网，英语听说读写和词汇，我们都能帮到你 扇贝英语{% endblock %}
-
+{% block script %}
+    {{ super() }}
+{#    $('#myTabs a').click(function (e) {#}
+{#    e.preventDefault()#}
+{#    $(this).tab('show')#}
+{#    })#}
+{#    $('#myTabs a[href="#profile"]').tab('show') // Select tab by name#}
+{#    $('#myTabs a:first').tab('show') // Select first tab#}
+{#    $('#myTabs a:last').tab('show') // Select last tab#}
+{#    $('#myTabs li:eq(2) a').tab('show') // Select third tab (0-indexed)#}
+{% endblock %}
 {% block page_content %}
 {{ super() }}
-    这里是背单词页面
+<p>今日单词:{{ current_user.word_totals }}</p>
+<p>新词: 他喵的这个新词功能怎么实现?</p>
+    <p>单词: {{ words.content }}</p>
+    <p>音标: {{ words.phonetic_symbol }}</p>
+    <p>英音: {{ words.USA_voice }}</p>
+    <p>美音: {{ words.UK_voice }}</p>
+    <p>单词解释: {{ words.translations }}</p>
+    <p>例句: {{ words.eg }}</p>
+    <p>共享笔记: {{ words.notes }}</p>
+    <p>我的笔记: </p>
+    <p>创建笔记: </p>
+
+{#    {{ wtf.quick_form(form) }}#}
+{#    {{ wtf.quick_form(form2) }}#}
 {% endblock %}
+{#<script type=text/javascript>#}
+{#        $(function () {#}
+{#                    //绑定click事件#}
+{#                    $('#CourseID').bind('click', function update_LabsID() {#}
+{#                        // 绑定的URL#}
+{#                        $.getJSON('/ajax_labsID', {#}
+{#                                    // 获取当前选中的option值#}
+{#                                    CourseID: $('select[name="CourseID"]').val()#}
+{#                                }, function (data) {#}
+{#                                    //接受到后台传来的json数据后的动作#}
+{#                                    $("#LabID").empty()#}
+{#                                    for (var i = 0; i < data.LabsID.length; i++) {#}
+{#                                        $("#LabID").append("<option value='" + data.LabsID[i] + "'>" + data.LabsID[i] + "</option>");#}
+{#                                    }#}
+{#                                    document.getElementById('LabName').value = data.LabName#}
+{#                                }#}
+{#                        );#}
+{#                        return false;#}
+{#                    });#}
+{#                    $('#CourseID').trigger("click")#}
+{#                }#}
+{#        );#}
+{#</script>#}

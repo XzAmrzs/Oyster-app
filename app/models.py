@@ -48,6 +48,11 @@ class Role(db.Model):
     def __repr__(self):
         return '<Role %r>' % self.name
 
+user_word = db.Table('user_word',
+    db.Column('user_id', db.Integer, db.ForeignKey('words.id')),
+    db.Column('word_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('level', db.Integer, default=0)
+)
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -70,7 +75,11 @@ class User(UserMixin, db.Model):
     # study_times = db.Column(db.Integer, default=5)
     level = db.Column(db.Integer, default=0)
     auto_voice = db.Column(db.Integer, default=0)
+    # 用户和笔记的一对多关系
     notes = db.relationship('Note', backref='author', lazy='dynamic')
+    # 用户和单词的多对多关系
+    words = db.relationship('Word', secondary=user_word, backref=db.backref('users', lazy='dynamic'))
+
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -183,25 +192,16 @@ class Word(db.Model):
     UK_voice = db.Column(db.String(128))
     eg = db.Column(db.String(128))
     translations = db.Column(db.Text())
+    phonetic_symbol = db.Column(db.String(128))
     # words表和notes表的一对多关系
     notes = db.relationship('Note', backref='word', lazy='dynamic')
+    # words表和users表的多对多关系在user中定义
 
     # 同义词功能还没有想好要怎么实现
     # synonym = db.Column(db.Text())
 
     def __repr__(self):
         return '<words %r>' % self.content
-
-
-class User_Word(db.Model):
-    __tablename__ = 'user_word'
-    id = db.Column(db.Integer, primary_key=True)
-    word_id = db.Column(db.Integer, db.ForeignKey('words.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    level = db.Column(db.Integer, default=0)
-
-    def __repr__(self):
-        return '<user_word %r %r>' % (self.word_id, self.user_id)
 
 
 class Note(db.Model):

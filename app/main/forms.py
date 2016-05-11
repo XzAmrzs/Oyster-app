@@ -64,3 +64,7 @@ class BDCSettingsForm(Form):
         self.rank.choices = [(0, u'四级'),(1, u'六级'),(2,u'托福'),(3,u'雅思')]
         self.auto_voice.choices = [(0, u'美音'),(1, u'英音')]
         self.level.choices = [(0,u'再认'),(1,u'拼写')]
+
+
+class BDCReviewForm(Form):
+    submit = SubmitField(u'开始学习')
