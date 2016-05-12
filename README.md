@@ -12,7 +12,7 @@ This repository contains the source code for my shanbay interview using `Flask` 
 
 我们会非常认真得阅读你的代码，在后续的沟通中我们将基于你的代码来讨论，如果你在开发过程中有什么问题，可以和我们沟通。
 
-## usage:
+## Usage:
 Install the requirements
 ```
 (venv)$ pip install -r requirements.txt    
@@ -20,11 +20,11 @@ Install the requirements
 Init database
 ```
 (venv)$ python manage.py shell
-db.create_all()
+(venv)$ db.create_all()
 ```
 Run
 ```
-python manage.py runserver
+(venv)$ python manage.py runserver
 ```
 
 **TODO LIST**：
