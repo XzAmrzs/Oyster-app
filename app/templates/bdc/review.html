@@ -16,15 +16,15 @@
     {{ super() }}
     <p>今日单词:{{ current_user.word_totals }}</p>
     <p>新词: 他喵的这个新词功能怎么实现?</p>
-    <p>单词: {{ words.content }}</p>
-    <p>音标: {{ words.phonetic_symbol }}</p>
-    <p>英音: {{ words.USA_voice }}</p>
-    <p>美音: {{ words.UK_voice }}</p>
-    <p>单词解释: {{ words.translations }}</p>
-    <p>例句: {{ words.eg }}</p>
+        <p>单词: {{ word.content }}</p>
+    <p>音标: {{ word.phonetic_symbol }}</p>
+    <p>英音: {{ word.USA_voice }}</p>
+    <p>美音: {{ word.UK_voice }}</p>
+    <p>单词解释: {{ word.translations }}</p>
+    <p>例句: {{ word.eg }}</p>
     <p>共享笔记:
     <ol>
-        {% for note in words.notes %}
+        {% for note in word.notes %}
             <li>{{ note.body }}
                 作者:{{ note.author.username }}</li>
         {% endfor %}
@@ -33,7 +33,7 @@
     <p>我的笔记:
     <ol>
         {% for cu_note in current_user.notes %}
-            {% if cu_note.word_id == words.id %}
+            {% if cu_note.word_id == word.id %}
                 <li>{{ cu_note.body }}</li>
             {% endif %}
         {% endfor %}

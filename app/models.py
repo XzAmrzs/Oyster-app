@@ -1,10 +1,10 @@
 # coding=utf-8
-from datetime import datetime
+from datetime import datetime, date
 import hashlib
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, request
-from flask.ext.login import UserMixin, AnonymousUserMixin
+from flask.ext.login import UserMixin, AnonymousUserMixin, current_user
 from . import db, login_manager
 
 
@@ -69,6 +69,7 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    last_checkin = db.Column(db.DateTime(), default=date(2013, 1, 1))
     avatar_hash = db.Column(db.String(32))
     # shanbay修改
     # timezone = db.Column(db.String(32))
@@ -85,7 +86,7 @@ class User(UserMixin, db.Model):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            if self.email == current_app.config['FLASKY_ADMIN']:
+            if self.email == current_app.config['SHANBAY_ADMIN']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
@@ -180,6 +181,11 @@ class User(UserMixin, db.Model):
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
                 url=url, hash=hash, size=size, default=default, rating=rating)
 
+    # 用当前日期和用户上次打完卡的时间做比较(只比较天数)
+    # 如果天数相差大于等于1那么说明是新的一天,返回True
+    def is_new_day(self):
+        return (date.today() - self.last_checkin).days >= 1
+
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -188,7 +194,6 @@ class Word(db.Model):
     __tablename__ = 'words'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(64), unique=True,index=True)
-    # 0 四级 1 六级 2 托福 3 雅思
     rank = db.Column(db.Integer, index=True)
     USA_voice = db.Column(db.TEXT(), unique=True)
     UK_voice = db.Column(db.TEXT(), unique=True)
@@ -201,6 +206,22 @@ class Word(db.Model):
 
     # 同义词功能还没有想好要怎么实现
     # synonym = db.Column(db.Text())
+
+    # 根据用户的难度和用户的单词量取新单词
+    # 0 四级 1 六级 2 托福 3 雅思
+    # 每日单词量为0.17
+    def new_words(self):
+        # return a new words list
+        cu_rank = current_user.rank
+        cu_word_totals = int(current_user.word_totals * 0.17)
+        words = Word.query.filter_by(rank=cu_rank).limit(cu_word_totals).all()
+        return words
+
+    def insert_new_words(self):
+        # words = db.relationship('Word', secondary=user_word, backref=db.backref('users', lazy='dynamic'))
+        words = self.new_words()
+        # 将新单词插入到user_word表中
+        db.session.add(self)
 
     def __repr__(self):
         return '<words %r>' % self.content

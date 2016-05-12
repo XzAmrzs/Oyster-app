@@ -150,3 +150,12 @@ class UserModelTestCase(unittest.TestCase):
         self.assertTrue('d=retro' in gravatar_retro)
         self.assertTrue('https://secure.gravatar.com/avatar/' +
                         'd4c74594d841139328695756648b6bd6' in gravatar_ssl)
+
+     # def test_is_new_day(self):
+     #    u = User(password='cat')
+     #    db.session.add(u)
+     #    db.session.commit()
+     #    self.assertTrue(
+     #        (datetime.utcnow() - u.member_since).total_seconds() < 3)
+     #    self.assertTrue(
+     #        (datetime.utcnow() - u.last_seen).total_seconds() < 3)

@@ -24,6 +24,8 @@ def user(username):
 def bdc():
     # form = BDCReviewForm()
     words = Word.query.filter_by(id=1).first_or_404()
+    # if current_user.is_new_day():
+    #     words = Word.new_words()
     form = NoteForm()
     if form.validate_on_submit():
         note = Note(body=form.body.data,
@@ -85,7 +87,7 @@ def bdc():
     #     db.session.add(current_user)
     #     flash('Your profile has been updated.')
     #     return redirect(url_for('.user', username=current_user.username))
-    return render_template('bdc/review.html', words=words, form=form)
+    return render_template('bdc/review.html', word=words, form=form)
 
 
 @main.route('/bdc/settings', methods=['GET', 'POST'])
@@ -98,7 +100,7 @@ def bdc_settings():
         current_user.level = form.level.data
         current_user.auto_voice = form.auto_voice
         db.session.add(current_user)
-        flash('Your profile has been updated.')
+        flash('Your vocabulary settings has been updated.')
         return redirect(url_for('.user', username=current_user.username))
     form.word_totals.data = current_user.word_totals
     form.rank.data = current_user.rank
