@@ -68,3 +68,8 @@ class BDCSettingsForm(Form):
 
 class BDCReviewForm(Form):
     submit = SubmitField(u'开始学习')
+
+
+class NoteForm(Form):
+    body = StringField('', validators=[Required()])
+    submit = SubmitField(u'提交笔记')

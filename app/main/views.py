@@ -2,9 +2,9 @@
 from flask import render_template, redirect, url_for, abort, flash
 from flask.ext.login import login_required, current_user
 from . import main
-from .forms import EditProfileForm, EditProfileAdminForm, BDCSettingsForm, BDCReviewForm
+from .forms import EditProfileForm, EditProfileAdminForm, BDCSettingsForm, BDCReviewForm, NoteForm
 from .. import db
-from ..models import Role, User, Word
+from ..models import Role, User, Word, Note
 from ..decorators import admin_required
 
 
@@ -23,6 +23,15 @@ def user(username):
 def bdc():
     # form = BDCReviewForm()
     words = Word.query.filter_by(id=1).first_or_404()
+    form = NoteForm()
+    if form.validate_on_submit():
+        note = Note(body=form.body.data,
+                    word=words,
+                    author=current_user._get_current_object()
+                    )
+        db.session.add(note)
+        flash(u'您的笔记添加成功')
+        return redirect(url_for('.bdc'))
     # userNow = request.user  # 获取username，这个是个实例
     # userName = userNow.username
     # settingUser_instance = Setting.objects.get(user=userNow.id)
@@ -75,11 +84,7 @@ def bdc():
     #     db.session.add(current_user)
     #     flash('Your profile has been updated.')
     #     return redirect(url_for('.user', username=current_user.username))
-
-    # form.name.data = current_user.name
-    # form.location.data = current_user.location
-    # form.about_me.data = current_user.about_me
-    return render_template('bdc/review.html', words=words)
+    return render_template('bdc/review.html', words=words, form=form)
 
 
 @main.route('/bdc/settings', methods=['GET', 'POST'])

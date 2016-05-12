@@ -22,11 +22,25 @@
     <p>美音: {{ words.UK_voice }}</p>
     <p>单词解释: {{ words.translations }}</p>
     <p>例句: {{ words.eg }}</p>
-    <p>共享笔记: {{ words.notes }}</p>
-    <p>我的笔记: </p>
+    <p>共享笔记:
+    <ol>
+        {% for note in words.notes %}
+        <li>{{ note.body }}
+        作者:{{ note.author.username }}</li>
+        {% endfor %}
+    </ol>
+    </p>
+    <p>我的笔记:
+    <ol>
+        {% for cu_note in current_user.notes %}
+            {% if cu_note.word_id == words.id %}
+        <li>{{ cu_note.body }}</li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+    </p>
     <p>创建笔记: </p>
-
-{#    {{ wtf.quick_form(form) }}#}
+    {{ wtf.quick_form(form) }}
 {#    {{ wtf.quick_form(form2) }}#}
 {% endblock %}
 {#<script type=text/javascript>#}
