@@ -3,19 +3,19 @@
 {% block title %}扇贝网，英语听说读写和词汇，我们都能帮到你 扇贝英语{% endblock %}
 {% block script %}
     {{ super() }}
-{#    $('#myTabs a').click(function (e) {#}
-{#    e.preventDefault()#}
-{#    $(this).tab('show')#}
-{#    })#}
-{#    $('#myTabs a[href="#profile"]').tab('show') // Select tab by name#}
-{#    $('#myTabs a:first').tab('show') // Select first tab#}
-{#    $('#myTabs a:last').tab('show') // Select last tab#}
-{#    $('#myTabs li:eq(2) a').tab('show') // Select third tab (0-indexed)#}
+    {#    $('#myTabs a').click(function (e) {#}
+    {#    e.preventDefault()#}
+    {#    $(this).tab('show')#}
+    {#    })#}
+    {#    $('#myTabs a[href="#profile"]').tab('show') // Select tab by name#}
+    {#    $('#myTabs a:first').tab('show') // Select first tab#}
+    {#    $('#myTabs a:last').tab('show') // Select last tab#}
+    {#    $('#myTabs li:eq(2) a').tab('show') // Select third tab (0-indexed)#}
 {% endblock %}
 {% block page_content %}
-{{ super() }}
-<p>今日单词:{{ current_user.word_totals }}</p>
-<p>新词: 他喵的这个新词功能怎么实现?</p>
+    {{ super() }}
+    <p>今日单词:{{ current_user.word_totals }}</p>
+    <p>新词: 他喵的这个新词功能怎么实现?</p>
     <p>单词: {{ words.content }}</p>
     <p>音标: {{ words.phonetic_symbol }}</p>
     <p>英音: {{ words.USA_voice }}</p>
@@ -25,8 +25,8 @@
     <p>共享笔记:
     <ol>
         {% for note in words.notes %}
-        <li>{{ note.body }}
-        作者:{{ note.author.username }}</li>
+            <li>{{ note.body }}
+                作者:{{ note.author.username }}</li>
         {% endfor %}
     </ol>
     </p>
@@ -34,14 +34,14 @@
     <ol>
         {% for cu_note in current_user.notes %}
             {% if cu_note.word_id == words.id %}
-        <li>{{ cu_note.body }}</li>
+                <li>{{ cu_note.body }}</li>
             {% endif %}
         {% endfor %}
     </ol>
     </p>
     <p>创建笔记: </p>
     {{ wtf.quick_form(form) }}
-{#    {{ wtf.quick_form(form2) }}#}
+    {#    {{ wtf.quick_form(form2) }}#}
 {% endblock %}
 {#<script type=text/javascript>#}
 {#        $(function () {#}

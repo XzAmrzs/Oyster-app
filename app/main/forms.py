@@ -1,6 +1,6 @@
 # coding=utf-8
 from flask.ext.wtf import Form
-from wtforms import StringField, TextAreaField, BooleanField, SelectField,\
+from wtforms import StringField, TextAreaField, BooleanField, SelectField, \
     SubmitField
 from wtforms.validators import Required, Length, Email, Regexp
 from wtforms import ValidationError
@@ -61,9 +61,9 @@ class BDCSettingsForm(Form):
     def __init__(self, *args, **kwargs):
         super(BDCSettingsForm, self).__init__(*args, **kwargs)
         self.word_totals.choices = [(total, total) for total in xrange(50, 701, 50)]
-        self.rank.choices = [(0, u'四级'),(1, u'六级'),(2,u'托福'),(3,u'雅思')]
-        self.auto_voice.choices = [(0, u'美音'),(1, u'英音')]
-        self.level.choices = [(0,u'再认'),(1,u'拼写')]
+        self.rank.choices = [(0, u'四级'), (1, u'六级'), (2, u'托福'), (3, u'雅思')]
+        self.auto_voice.choices = [(0, u'美音'), (1, u'英音')]
+        self.level.choices = [(0, u'再认'), (1, u'拼写')]
 
 
 class BDCReviewForm(Form):

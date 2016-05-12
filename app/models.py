@@ -48,11 +48,13 @@ class Role(db.Model):
     def __repr__(self):
         return '<Role %r>' % self.name
 
+
 user_word = db.Table('user_word',
-    db.Column('user_id', db.Integer, db.ForeignKey('words.id')),
-    db.Column('word_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('level', db.Integer, default=0)
-)
+                     db.Column('user_id', db.Integer, db.ForeignKey('words.id')),
+                     db.Column('word_id', db.Integer, db.ForeignKey('users.id')),
+                     db.Column('level', db.Integer, default=0, index=True)
+                     )
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -79,7 +81,6 @@ class User(UserMixin, db.Model):
     notes = db.relationship('Note', backref='author', lazy='dynamic')
     # 用户和单词的多对多关系
     words = db.relationship('Word', secondary=user_word, backref=db.backref('users', lazy='dynamic'))
-
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -186,11 +187,12 @@ class User(UserMixin, db.Model):
 class Word(db.Model):
     __tablename__ = 'words'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(64), unique=True, index=True)
-    rank = db.Column(db.String(64), unique=True, index=True)
-    USA_voice = db.Column(db.String(128))
-    UK_voice = db.Column(db.String(128))
-    eg = db.Column(db.String(128))
+    content = db.Column(db.String(64), unique=True,index=True)
+    # 0 四级 1 六级 2 托福 3 雅思
+    rank = db.Column(db.Integer, index=True)
+    USA_voice = db.Column(db.TEXT(), unique=True)
+    UK_voice = db.Column(db.TEXT(), unique=True)
+    eg = db.Column(db.Text())
     translations = db.Column(db.Text())
     phonetic_symbol = db.Column(db.String(128))
     # words表和notes表的一对多关系
@@ -207,7 +209,7 @@ class Word(db.Model):
 class Note(db.Model):
     __tablename__ = 'notes'
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(64), unique=True, index=True)
+    body = db.Column(db.TEXT(), index=True)
     like_counts = db.Column(db.Integer, default=0)
     dislike_counts = db.Column(db.Integer, default=0)
     timestamp = db.Column(db.DateTime(64), index=True, default=datetime.utcnow)

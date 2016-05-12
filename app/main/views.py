@@ -18,6 +18,7 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('user.html', user=user)
 
+
 @main.route('/bdc/review', methods=['GET', 'POST'])
 @login_required
 def bdc():
@@ -105,6 +106,7 @@ def bdc_settings():
     form.auto_voice.data = current_user.auto_voice
     return render_template('bdc/bdc_settings.html', form=form)
 
+
 @main.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -149,13 +151,13 @@ def edit_profile_admin(id):
     return render_template('edit_profile.html', form=form, user=user)
 
 
-# @main.route('/ajax_labsID')
-# def addID():
-#     courseID = request.args.get('CourseID', '0', type=str)
-#     course_ajax = Courses.query.filter_by(CourseID=courseID).first()
-#     print course_ajax.labs
-#     x = []
-#     for i in course_ajax.labs:
-#         x.append(i.LabID)
-#     LabName_ajax = Labs.query.filter(Labs.LabID == x[0]).first().LabName
-#     return jsonify(LabsID=x, LabName=LabName_ajax)
+    # @main.route('/ajax_labsID')
+    # def addID():
+    #     courseID = request.args.get('CourseID', '0', type=str)
+    #     course_ajax = Courses.query.filter_by(CourseID=courseID).first()
+    #     print course_ajax.labs
+    #     x = []
+    #     for i in course_ajax.labs:
+    #         x.append(i.LabID)
+    #     LabName_ajax = Labs.query.filter(Labs.LabID == x[0]).first().LabName
+    #     return jsonify(LabsID=x, LabName=LabName_ajax)
