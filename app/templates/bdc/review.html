@@ -16,6 +16,7 @@
     {{ super() }}
     <p>今日单词:{{ current_user.word_totals }}</p>
     <p>新词: 他喵的这个新词功能怎么实现?</p>
+    {% for word in words %}
         <p>单词: {{ word.content }}</p>
     <p>音标: {{ word.phonetic_symbol }}</p>
     <p>英音: {{ word.USA_voice }}</p>
@@ -41,6 +42,7 @@
     </p>
     <p>创建笔记: </p>
     {{ wtf.quick_form(form) }}
+    {% endfor %}
     {#    {{ wtf.quick_form(form2) }}#}
 {% endblock %}
 {#<script type=text/javascript>#}

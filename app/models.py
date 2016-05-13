@@ -1,6 +1,8 @@
 # coding=utf-8
 from datetime import datetime, date
 import hashlib
+
+from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, request
@@ -186,6 +188,21 @@ class User(UserMixin, db.Model):
     def is_new_day(self):
         return (date.today() - self.last_checkin).days >= 1
 
+    # 根据用户的难度和用户的单词量取新单词
+    # 0 四级 1 六级 2 托福 3 雅思
+    # 每日单词量的新词比为0.17
+    def new_words(self, proportion=0.17):
+        # return a new words list
+        cu_word_totals = int(self.word_totals * proportion)
+        return Word.query.filter_by(rank=self.rank).order_by(func.random()).limit(cu_word_totals).all()
+
+    def insert_new_words(self):
+        # 将新单词插入到user_word表中
+        for new_word in self.new_words():
+            self.words.append(new_word)
+        db.session.add(self)
+        db.session.commit()
+
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -193,7 +210,7 @@ class User(UserMixin, db.Model):
 class Word(db.Model):
     __tablename__ = 'words'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(64), unique=True,index=True)
+    content = db.Column(db.String(64), unique=True, index=True)
     rank = db.Column(db.Integer, index=True)
     USA_voice = db.Column(db.TEXT(), unique=True)
     UK_voice = db.Column(db.TEXT(), unique=True)
@@ -202,26 +219,11 @@ class Word(db.Model):
     phonetic_symbol = db.Column(db.String(128))
     # words表和notes表的一对多关系
     notes = db.relationship('Note', backref='word', lazy='dynamic')
+
     # words表和users表的多对多关系在user中定义
 
     # 同义词功能还没有想好要怎么实现
     # synonym = db.Column(db.Text())
-
-    # 根据用户的难度和用户的单词量取新单词
-    # 0 四级 1 六级 2 托福 3 雅思
-    # 每日单词量为0.17
-    def new_words(self):
-        # return a new words list
-        cu_rank = current_user.rank
-        cu_word_totals = int(current_user.word_totals * 0.17)
-        words = Word.query.filter_by(rank=cu_rank).limit(cu_word_totals).all()
-        return words
-
-    def insert_new_words(self):
-        # words = db.relationship('Word', secondary=user_word, backref=db.backref('users', lazy='dynamic'))
-        words = self.new_words()
-        # 将新单词插入到user_word表中
-        db.session.add(self)
 
     def __repr__(self):
         return '<words %r>' % self.content
