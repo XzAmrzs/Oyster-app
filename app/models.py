@@ -1,8 +1,9 @@
 # coding=utf-8
 from datetime import datetime, date
 import hashlib
-
 from sqlalchemy import func
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy import orm
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, request
@@ -51,13 +52,6 @@ class Role(db.Model):
         return '<Role %r>' % self.name
 
 
-user_word = db.Table('user_word',
-                     db.Column('user_id', db.Integer, db.ForeignKey('words.id')),
-                     db.Column('word_id', db.Integer, db.ForeignKey('users.id')),
-                     db.Column('level', db.Integer, default=0, index=True)
-                     )
-
-
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -71,19 +65,25 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
-    last_checkin = db.Column(db.DateTime(), default=date(2013, 1, 1))
+    # 上次完成任务
+    last_checkin = db.Column(db.Date(), default=date(2013, 1, 1))
     avatar_hash = db.Column(db.String(32))
     # shanbay修改
-    # timezone = db.Column(db.String(32))
+    timezone = db.Column(db.String(32))
+    # 难度
     rank = db.Column(db.Integer, default=0)
     word_totals = db.Column(db.Integer, default=50)
-    # study_times = db.Column(db.Integer, default=5)
+    study_times = db.Column(db.Integer, default=5)
+    # 对单词的目标掌握程度
     level = db.Column(db.Integer, default=0)
     auto_voice = db.Column(db.Integer, default=0)
     # 用户和笔记的一对多关系
     notes = db.relationship('Note', backref='author', lazy='dynamic')
     # 用户和单词的多对多关系
-    words = db.relationship('Word', secondary=user_word, backref=db.backref('users', lazy='dynamic'))
+    # words = db.relationship('Word', secondary=user_word, backref=db.backref('users', lazy='dynamic'))
+
+    # association proxy of "user_word" collection to "word" attribute
+    words = association_proxy('user_words', 'word')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -193,18 +193,63 @@ class User(UserMixin, db.Model):
     # 每日单词量的新词比为0.17
     def new_words(self, proportion=0.17):
         # return a new words list
-        cu_word_totals = int(self.word_totals * proportion)
-        return Word.query.filter_by(rank=self.rank).order_by(func.random()).limit(cu_word_totals).all()
+        today_new_words = []
+        cu_new_word_totals = int(self.word_totals * proportion)
+        words = Word.query.filter_by(rank=self.rank).order_by(func.random()).all()
+        i = 0
+        for new_word in words:
+            if new_word not in self.words:
+                today_new_words.append(new_word)
+                i += 1
+            if i == cu_new_word_totals:
+                break
+        return today_new_words
 
     def insert_new_words(self):
         # 将新单词插入到user_word表中
-        for new_word in self.new_words():
-            self.words.append(new_word)
+        self.words += self.new_words()
         db.session.add(self)
         db.session.commit()
 
+    def old_words(self, proportion=0.83):
+        # 按比例抽取前多少个单词掌握程度小于学习次数的单词列表
+        today_old_words = []
+        cu_old_word_totals = int(self.word_totals * proportion)
+        i = 0
+        for user_word in self.user_words:
+            if user_word.level < self.study_times:
+                today_old_words.append(user_word.word)
+                i += 1
+            if i == cu_old_word_totals:
+                break
+        return today_old_words
+
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class UserWord(db.Model):
+    __tablename__ = 'user_word'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    word_id = db.Column(db.Integer, db.ForeignKey('words.id'), primary_key=True)
+    level = db.Column(db.Integer, default=0, index=True)
+
+    # bidirectional attribute/collection of "user"/"user_words"
+    user = db.relationship(User, backref=orm.backref("user_words", cascade="all, delete-orphan"))
+    # reference to the "Word" object
+    word = db.relationship("Word")
+
+    def __init__(self, word=None, user=None, level=None):
+        # 史上巨吭，参数的word和user位置互换就运行不了了
+        self.user = user
+        self.word = word
+        self.level = level
+        # word = db.relationship("Word", backref='user_word')
+        #
+        # def __init__(self, **kwargs):
+        #     super(UserWord, self).__init__(**kwargs)
+        #     if self.level is None:
+        #         self.level = 0
 
 
 class Word(db.Model):
@@ -224,6 +269,8 @@ class Word(db.Model):
 
     # 同义词功能还没有想好要怎么实现
     # synonym = db.Column(db.Text())
+    def __init__(self, content):
+        self.content = content
 
     def __repr__(self):
         return '<words %r>' % self.content

@@ -15,35 +15,8 @@
 {% block page_content %}
     {{ super() }}
     <p>今日单词:{{ current_user.word_totals }}</p>
-    <p>新词: 他喵的这个新词功能怎么实现?</p>
-    {% for word in words %}
-        <p>单词: {{ word.content }}</p>
-    <p>音标: {{ word.phonetic_symbol }}</p>
-    <p>英音: {{ word.USA_voice }}</p>
-    <p>美音: {{ word.UK_voice }}</p>
-    <p>单词解释: {{ word.translations }}</p>
-    <p>例句: {{ word.eg }}</p>
-    <p>共享笔记:
-    <ol>
-        {% for note in word.notes %}
-            <li>{{ note.body }}
-                作者:{{ note.author.username }}</li>
-        {% endfor %}
-    </ol>
-    </p>
-    <p>我的笔记:
-    <ol>
-        {% for cu_note in current_user.notes %}
-            {% if cu_note.word_id == word.id %}
-                <li>{{ cu_note.body }}</li>
-            {% endif %}
-        {% endfor %}
-    </ol>
-    </p>
-    <p>创建笔记: </p>
+    <p>新词:  暂时没想好这个len()返回值放在哪里</p>
     {{ wtf.quick_form(form) }}
-    {% endfor %}
-    {#    {{ wtf.quick_form(form2) }}#}
 {% endblock %}
 {#<script type=text/javascript>#}
 {#        $(function () {#}

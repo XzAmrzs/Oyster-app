@@ -1,0 +1,42 @@
+{% extends "bdc/bdc.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}扇贝网，英语听说读写和词汇，我们都能帮到你 扇贝英语{% endblock %}
+{% block script %}
+    {{ super() }}
+    {#    $('#myTabs a').click(function (e) {#}
+    {#    e.preventDefault()#}
+    {#    $(this).tab('show')#}
+    {#    })#}
+    {#    $('#myTabs a[href="#profile"]').tab('show') // Select tab by name#}
+    {#    $('#myTabs a:first').tab('show') // Select first tab#}
+    {#    $('#myTabs a:last').tab('show') // Select last tab#}
+    {#    $('#myTabs li:eq(2) a').tab('show') // Select third tab (0-indexed)#}
+{% endblock %}
+{% block page_content %}
+{{ super() }}
+<p>单词: {{ word.content }}</p>
+<p>音标: {{ word.phonetic_symbol }}</p>
+<p>英音: {{ word.USA_voice }}</p>
+<p>美音: {{ word.UK_voice }}</p>
+<p>单词解释: {{ word.translations }}</p>
+<p>例句: {{ word.eg }}</p>
+<p>共享笔记:
+<ol>
+    {% for note in word.notes %}
+        <li>{{ note.body }}
+            作者:{{ note.author.username }}</li>
+    {% endfor %}
+</ol>
+</p>
+<p>我的笔记:
+<ol>
+    {% for cu_note in current_user.notes %}
+        {% if cu_note.word_id == word.id %}
+            <li>{{ cu_note.body }}</li>
+        {% endif %}
+    {% endfor %}
+</ol>
+</p>
+<p>创建笔记: </p>
+{{ wtf.quick_form(form) }}
+{% endblock %}
