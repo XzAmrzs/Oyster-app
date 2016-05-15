@@ -13,9 +13,22 @@ This repository contains the source code for my shanbay interview using `Flask` 
 我们会非常认真得阅读你的代码，在后续的沟通中我们将基于你的代码来讨论，如果你在开发过程中有什么问题，可以和我们沟通。
 
 ## Usage:
+create a virtualenv
+```
+$ virtualenv venv
+```
+Windows environment:
+```
+$ .\venv\Scripts\active
+```
+Linux environment:
+```
+$ source venv/bin/activate
+```
 Install the requirements
 ```
-(venv)$ pip install -r requirements.txt    
+(venv)$ cd requirements 
+(venv)$ pip install -r dev.text   
 ```
 Init database
 ```
@@ -36,13 +49,13 @@ Run
     - [x] 时区
     - [x] 个人简介
     - [x] 邮件确认
-- [x] 背单词设置 
+- [x] 个人单词设置 
     - [x] 每日学习量
     - [x] 单词难度
     - [x] 单词的目标掌握程度
     - [x] 自动发音模式
 - [ ] 背单词功能
-    - [ ] ajax实现的背单词交互过程
+    - [x] ajax实现的背单词交互过程
     - [x] 查看解释
     - [x] 查看例句
     - [x] 查看发音
@@ -51,5 +64,13 @@ Run
     - [x] 我的笔记
     - [x] 添加笔记
     - [x] 查看其他用户笔记
-    
+- [x] 权限功能(`@admin_required()`)
+    - [x] 管理员权限
+    - [x] 普通用户权限
+    - [x] 管理员对普通用户资料的修改
+    - [ ] 管理员对该单词共享笔记的操作
+- [ ] 前后端分离
+    - [x] model的REST-API
+    - [x] REST-API权限设置
+    - [ ] "完成任务"这个API的权限问题
     

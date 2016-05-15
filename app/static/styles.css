@@ -6,100 +6,321 @@
     min-height: 260px;
     margin-left: 280px;
 }
-
-.bs-nav {
+.bs-nav
+{
     background-color: #209e85;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
-.bs-nav a, li {
+.bs-nav a, .ba-nav li{
     color: #c9e6e0 !important;
     margin-left: 10px;
     font-size: 16px;
 }
 
-.navbar-header {
+.navbar-header
+{
     width: 100px;
     margin-top: 5px;
     margin-left: 0;
 }
 
-.bs-logo img {
+.bs-logo img
+{
     max-width: 100%;
     width: auto;
     height: auto;
     vertical-align: middle;
 }
 
-main {
-    padding-top: 30px;
+main
+{
     background-color: rgb(238, 238, 238);
     min-height: 1000px;
 }
 
-.card {
+.card
+{
     width: 100%;
     box-shadow: #CCC 2px 2px 8px;
     border-radius: 10px;
-    overflow: hidden;
+    overflow:hidden;
 }
 
-.card .plan {
+.card .plan
+{
     background-color: white;
     min-height: 108px;
     text-align: center;
     vertical-align: middle;
 }
 
-.plan p {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+.plan p
+{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 35px;
     word-wrap: break-word;
     line-height: 100px;
 }
 
-.plan a {
+.plan a{
     position: relative;
     float: right;
 }
 
-.speed {
+.speed
+{
     background-color: rgb(238, 238, 238);
     min-height: 158px;
     text-align: center;
     vertical-align: middle;
 }
 
-.speed .row {
-    margin: 10px;
+.speed .row
+{
+    margin:10px;
     min-height: 60px;
     line-height: 60px;
 }
 
-.bs-num {
+.bs-num
+{
     font-size: 35px;
     font-weight: bold;
     color: #209e85;
 }
 
-.bs-text {
+.bs-text
+{
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     color: #333;
 }
 
-hr {
+hr{
     margin: 18px;
     border-top: 1px solid #ccc;
 }
 
-.bs-go {
+.bs-go
+{
     line-height: 30px;
     color: #7c8a8a;
     font-size: 20px;
     text-align: center;
 }
 
-.bs-pill li {
-    color: #3c3c3c;
+.bs-mean ul
+{
+	color: #666666;
+	line-height: 50px;
+	padding: 0px;
+	margin: 0px;
+}
+
+.bs-mean ul li:hover{
+	float:left;
+	list-style:none; /* 将默认的列表符号去掉 */
+	margin:0px; /* 将默认的外边距去掉 */
+	margin-right: 10px;
+	padding:0px 10px;
+	line-height: 50px;
+	border-bottom: solid 2px #333333;
+}
+
+.bs-mean ul li
+{
+	float:left;
+	list-style:none; /* 将默认的列表符号去掉 */
+	margin:0px; /* 将默认的外边距去掉 */
+	margin-right: 10px;
+	padding:0px 10px;
+	line-height: 50px;
+
+}
+
+.bs-mean span
+{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 15px;
+}
+
+.bs-mean
+{
+	margin: 0px;
+	padding: 0px;
+	min-height: 52px;
+	vertical-align: middle;
+}
+
+
+.bs-study
+{
+	min-height: 500px;
+	background-color: #ffffff;
+}
+
+.bs-center{
+	text-align: center;
+}
+
+.bs-title
+{
+	margin: 30px;
+	color: #209E85;
+}
+
+.bs-title p
+{
+	font-weight: bold;
+	line-height: 80px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 30px;
+}
+
+.bs-word-card
+{
+	background-color: rgb(238, 238, 238);
+	min-height: 200px;
+	padding: 50px;
+}
+
+.new-word,.day-word
+{
+	float: left;
+	min-height: 50px;
+	margin-left: 30px;
+}
+
+.study-btn
+{
+	float: right;
+	margin-top: 20px;
+}
+
+.bs-num
+{
+	font-weight: bold;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 50px;
+	margin: 0px;
+}
+
+.bs-txt
+{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 20px;
+}
+
+.study-btn button
+{
+	width: 200px;
+	height: 50px;
+	color: #ffffff;
+	background-color: rgb(56, 194, 168);
+}
+
+.bs-word-know, .bs-word-detail{
+	padding: 40px;
+}
+
+.bs-word-detail .row
+{
+	margin: 20px;
+}
+
+.bs-word-detail .col-md-2>span
+{
+	float: right;
+	font-weight: bold;
+}
+
+.bs-word-explain
+{
+	height: auto;
+	padding: 15px;
+	font-size: 16px;
+}
+
+.bs-word-sentence
+{
+	font-size: 20px;
+}
+
+.bs-know-table tr
+{
+	height: 50px;
+}
+
+.bs-know-table tr:hover
+{
+	background-color: #209E85;
+	color: #FFFFFF;
+}
+
+.bs-know-table td{
+	line-height: 30px !important;
+}
+
+.bs-know-td
+{
+	border: 1px solid #DDD;
+	width: 10%;
+	font: "微软雅黑";
+	font-weight: bold;
+	text-align: center;
+}
+
+.bs-know-tdt
+{
+	border: 1px solid #DDD;
+}
+
+.bs-word
+{
+	font: "微软雅黑";
+	font-size: 40px;
+}
+
+.bs-symbol
+{
+	color:rgb(238, 238, 238);
+	margin: 10px;
+	font-size: 20px;
+}
+
+.bs-voice{
+	color:#000000 ;
+	margin: 10px;
+	font-size: 20px;
+}
+
+.bs-note
+{
+	font-size: 16px;
+}
+
+.bs-author
+{
+	font-size: 14px;
+}
+
+.tab-content{
+	margin-top: 20px;
+}
+
+.next-word
+{
+	background: url(https://static.baydn.com/static/img/icons.png) no-repeat -256px -256px;
+	width: 96px;
+	height: 96px;
+	margin-top: 150px;
+}
+
+.next-word:hover
+{
+	background: url(https://static.baydn.com/static/img/icons.png) no-repeat -256px -352px;
+	width: 96px;
+	height: 96px;
+	margin-top: 150px;
 }

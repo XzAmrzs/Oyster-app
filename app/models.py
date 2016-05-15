@@ -6,8 +6,10 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy import orm
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app, request
+from flask import current_app, request, url_for
 from flask.ext.login import UserMixin, AnonymousUserMixin, current_user
+
+# from app.api_1_0.users import get_user_word_notes
 from . import db, login_manager
 
 
@@ -17,6 +19,11 @@ class Permission:
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
     ADMINISTER = 0x80
+
+
+class Rank:
+    # 0 四级 1 六级 2 托福 3 雅思
+    pass
 
 
 class Role(db.Model):
@@ -183,16 +190,21 @@ class User(UserMixin, db.Model):
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
                 url=url, hash=hash, size=size, default=default, rating=rating)
 
-    # 用当前日期和用户上次打完卡的时间做比较(只比较天数)
-    # 如果天数相差大于等于1那么说明是新的一天,返回True
-    def is_new_day(self):
-        return (date.today() - self.last_checkin).days >= 1
+    def is_new(self):
+        return False if self.words else True
+
+    def is_checkin(self):
+        return (date.today() - self.last_checkin).days == 0
+
+    def is_have_today_words(self):
+        return True if UserWord.query.filter_by(user_id=self.id, last_time=date.today()).first() else True
+
+    def init_words(self):
+        return Word.query.filter_by(rank=self.rank).order_by(func.random()).limit(self.word_totals).all()
 
     # 根据用户的难度和用户的单词量取新单词
-    # 0 四级 1 六级 2 托福 3 雅思
     # 每日单词量的新词比为0.17
-    def new_words(self, proportion=0.17):
-        # return a new words list
+    def generate_new_words(self, proportion=0.17):
         today_new_words = []
         cu_new_word_totals = int(self.word_totals * proportion)
         words = Word.query.filter_by(rank=self.rank).order_by(func.random()).all()
@@ -206,23 +218,48 @@ class User(UserMixin, db.Model):
         return today_new_words
 
     def insert_new_words(self):
-        # 将新单词插入到user_word表中
-        self.words += self.new_words()
+        self.words += self.generate_new_words()
         db.session.add(self)
         db.session.commit()
 
-    def old_words(self, proportion=0.83):
-        # 按比例抽取前多少个单词掌握程度小于学习次数的单词列表
+    def generate_today_words(self, proportion=0.17):
+        # 按比例抽取对单词掌握程度小于学习次数的单词列表
         today_old_words = []
-        cu_old_word_totals = int(self.word_totals * proportion)
-        i = 0
+        today_new_words = []
+        cu_new_word_totals = int(self.word_totals * proportion)
+        cu_old_word_totals = self.word_totals - cu_new_word_totals
+        old_totals = 0
+        new_totals = 0
         for user_word in self.user_words:
-            if user_word.level < self.study_times:
-                today_old_words.append(user_word.word)
-                i += 1
-            if i == cu_old_word_totals:
-                break
-        return today_old_words
+            if user_word.level in range(1, self.study_times):
+                if old_totals != cu_old_word_totals:
+                    today_old_words.append(user_word.word)
+                    user_word.last_time = date.today()
+                    old_totals += 1
+            if user_word.level == 0:
+                if new_totals != cu_new_word_totals:
+                    today_new_words.append(user_word.word)
+                    user_word.last_time = date.today()
+                    new_totals += 1
+        db.session.add(self)
+        db.session.commit()
+        today_words = today_new_words + today_old_words
+        return today_words, today_new_words
+
+    def get_today_words(self):
+        today_words = [x.word for x in self.user_words if x.last_time == date.today()]
+        return today_words
+
+    def get_today_new_words(self):
+        today_new_words = [x.word for x in self.user_words if x.last_time == date.today() and x.level == 0]
+        return today_new_words
+
+    def to_json(self):
+        json_user = {
+            'id': self.id,
+            'username': self.username,
+        }
+        return json_user
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -233,7 +270,7 @@ class UserWord(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     word_id = db.Column(db.Integer, db.ForeignKey('words.id'), primary_key=True)
     level = db.Column(db.Integer, default=0, index=True)
-
+    last_time = db.Column(db.Date(), default=date(2013, 1, 1))
     # bidirectional attribute/collection of "user"/"user_words"
     user = db.relationship(User, backref=orm.backref("user_words", cascade="all, delete-orphan"))
     # reference to the "Word" object
@@ -244,12 +281,6 @@ class UserWord(db.Model):
         self.user = user
         self.word = word
         self.level = level
-        # word = db.relationship("Word", backref='user_word')
-        #
-        # def __init__(self, **kwargs):
-        #     super(UserWord, self).__init__(**kwargs)
-        #     if self.level is None:
-        #         self.level = 0
 
 
 class Word(db.Model):
@@ -275,6 +306,19 @@ class Word(db.Model):
     def __repr__(self):
         return '<words %r>' % self.content
 
+    def to_json(self):
+        json_word = {
+            'id': self.id,
+            'content': self.content,
+            'USA_voice': self.USA_voice,
+            'UK_voice': self.UK_voice,
+            'eg': self.eg,
+            'translations': self.translations,
+            'phonetic_symbol': self.phonetic_symbol,
+            'user_notes': [note.to_json() for note in self.notes if note.id == current_user.id]
+        }
+        return json_word
+
 
 class Note(db.Model):
     __tablename__ = 'notes'
@@ -290,6 +334,14 @@ class Note(db.Model):
 
     def __repr__(self):
         return '<notes %r>' % self.body
+
+    def to_json(self):
+        json_note = {
+            'id': self.id,
+            'body': self.body,
+            'author': self.author.to_json(),
+        }
+        return json_note
 
 
 class AnonymousUser(AnonymousUserMixin):
