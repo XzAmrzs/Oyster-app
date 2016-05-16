@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <title>扇贝网，英语听说读写和词汇，我们都能帮到你 扇贝英语</title>
-     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.3.min.js"></script>
     <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
@@ -95,21 +95,20 @@
                     </div>
                 </div>
                 <div class="col-md-10 bs-center bs-word-know" style="display: none;">
-                    </p><span id="word-id" style="visibility: hidden;"></span></p>
                     <p><span class="bs-word" id="word-content"></span></p>
                     <p><span class="bs-symbol" id="word-symbol"></span>
                         <span class="bs-voice" id="word-voice"></span></p>
                     <div class="row">
+                        <div class="col-md-12">
+                            <p><span class="bs-word-eg" id="word-eg" style="display: none"></span></p>
+                            <p><span class="bs-word-explain" id="word-explain" style="display: none"></span></p>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-2">
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-8 bs-center">
                             <table class="table bs-know-table">
-                                <tr id="eg" style="display: none">
-                                    <td class="bs-word-eg"></td>
-                                </tr>
-                                <tr id="translations" style="display: none">
-                                    <td class="bs-word-translations"></td>
-                                </tr>
                                 <tr id="know">
                                     <td class="bs-know-td">1.</td>
                                     <td class="bs-know-tdt">认识</td>
@@ -126,7 +125,10 @@
                                     <td class="bs-know-td">2.</td>
                                     <td class="bs-know-tdt">没想起来</td>
                                 </tr>
-
+                                <tr id="answer" style="display: none;">
+                                    <td class="bs-know-td">1.</td>
+                                    <td class="bs-know-tdt">查看详细</td>
+                                </tr>
                             </table>
                         </div>
                         <div class="col-md-2">
@@ -202,10 +204,7 @@
                 </div>
                 <div class="col-md-1" id="ibox">
                 </div>
-
-
             </div>
-
         </div>
     </div>
 </main>
@@ -224,8 +223,9 @@
                         $("span#word-content").text(word.content);
                         $("span#word-voice").text(word.UK_voice);
                         $("span#word-symbol").text(word.phonetic_symbol);
-
-                        $("#word-explain").attr("value", word.translations);
+                        $("input#word-explain").attr("value", word.translations);
+                        $("span#word-explain").text(word.translations);
+                        $("span#word-eg").text(word.eg);
                         $("p#word-eg").text(word.eg);
                         var notes = word.user_notes;
                         for (var i = 0; i < notes.length; i++) {
@@ -240,49 +240,60 @@
         $("#add-note-input").click(function () {
             var post_url = "/api/v1.0/words/" + word.id + "/notes/";
             $.ajax({
-                  type: "POST",
-                  contentType: "application/json; charset=utf-8",
-                  url: post_url,
-                  data: JSON.stringify({body: $("#add-note-text").val()}),
-                  success: function (data) {
-                      $("#add-note-text").val(null);
-                      var append_item = "<li>" + data.body + "</li>";
-                      $("ol#user-note").append(append_item);
-                      alert("添加成功")
-                  },
-                  dataType: "json"
-                });
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: post_url,
+                data: JSON.stringify({body: $("#add-note-text").val()}),
+                success: function (data) {
+                    $("#add-note-text").val(null);
+                    var append_item = "<li>" + data.body + "</li>";
+                    $("ol#user-note").append(append_item);
+                    alert("添加成功")
+                },
+                dataType: "json"
+            });
         });
         $("tr#know").click(function () {
-            word.processed=true;
+            word.processed = true;
             $("div.bs-word-know").css("display", "none");
             $("div#ibox").css("display", "none");
             $("div.bs-word-detail").css("display", "block");
             $("div#rightbox").css("display", "block");
-            $("#eg").css("display", "none");
+            $("#word-eg").css("display", "none");
             $("#translations").css("display", "none");
         });
-
         $("tr#unknow").click(function () {
-            $("#eg").css("display", "block");
+            $("#word-eg").css("display", "block");
             $("#know").css("display", "none");
             $("#unknow").css("display", "none");
-            $("#remember").css("display", "block");
-            $("#unremember").css("display", "block");
-
+            $("#remember").css("display", "");
+            $("#unremember").css("display", "");
         });
         $("tr#remember").click(function () {
-            $("#eg").css("display", "block");
+            $("#word-eg").css("display", "block");
             $("div.bs-word-know").css("display", "none");
             $("div.bs-word-remember").css("display", "none");
             $("div#ibox").css("display", "none");
             $("div.bs-word-detail").css("display", "block");
             $("div#rightbox").css("display", "block");
-            $("#eg").css("display", "none");
+            $("#word-eg").css("display", "none");
             $("#translations").css("display", "none");
         });
         $("tr#unremember").click(function () {
-            $("#translations").css("display", "block");
+            $("#word-explain").css("display", "block");
+            $("#remember").css("display", "none");
+            $("#unremember").css("display", "none");
+            $("#answer").css("display", "");
+        });
+        $("tr#answer").click(function () {
+            word.processed = true;
+            $("div.bs-word-know").css("display", "none");
+            $("div#ibox").css("display", "none");
+            $("div.bs-word-detail").css("display", "block");
+            $("div#rightbox").css("display", "block");
+            $("#word-eg").css("display", "none");
+            $("#word-explain").css("display", "none");
+            $("#answer").css("display", "none");
         });
         $("a#shared-notes").click(function () {
             if (!$("ol#shared-notes-ol").text()) {
@@ -296,7 +307,6 @@
                         }
                 );
             }
-
         });
         $("#rightbox").click(function () {
             if (num < words.length) {
@@ -306,8 +316,9 @@
                 $("span#word-content").text(word.content);
                 $("span#word-voice").text(word.UK_voice);
                 $("span#word-symbol").text(word.phonetic_symbol);
-                $("#word-explain").attr("value", word.translations);
+                $("input#word-explain").attr("value", word.translations);
                 $("p#word-eg").text(word.eg);
+                $("span#word-eg").text(word.eg);
                 $("ol#user-note li").remove();
                 var notes = word.user_notes;
                 for (var i = 0; i < notes.length; i++) {
@@ -317,24 +328,25 @@
                 $("ol#shared-notes-ol li").remove();
 
                 $("div#index").css("display", "none");
-            $("div#ibox").css("display", "none");
-            $("div.bs-word-know").css("display", "block");
-            $("div.bs-word-detail").css("display", "none");
-            $("div#rightbox").css("display", "none");
+                $("div#ibox").css("display", "none");
+                $("div.bs-word-know").css("display", "block");
+                $("#know").css("display", "");
+                $("#unknow").css("display", "");
+                $("div.bs-word-detail").css("display", "none");
+                $("div#rightbox").css("display", "none");
             }
             else {
-                var post_url = "/api/v1.0/users/"+ {{ current_user.id }}+"/checkin/";
-            $.ajax({
-                  type: "POST",
-                  contentType: "application/json; charset=utf-8",
-                  url: post_url,
-                  data: JSON.stringify({words: words}),
-                  success: function (data) {
-                      alert("打卡完成")
-                  },
-                  dataType: "json"
+                var post_url = "/api/v1.0/users/" + {{ current_user.id }}+"/checkin/";
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: post_url,
+                    data: JSON.stringify({words: words}),
+                    success: function (data) {
+                        alert("打卡完成")
+                    },
+                    dataType: "json"
                 });
-{#                $("div.bs-word-checkin").css("display", "block");#}
                 window.location.reload()
             }
         });
@@ -342,3 +354,4 @@
 </script>
 </body>
 </html>
+

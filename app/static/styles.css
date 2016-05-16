@@ -6,325 +6,394 @@
     min-height: 260px;
     margin-left: 280px;
 }
+.bs-container {
+  padding-top: 0;
+  padding-bottom: 0px;
+}
 
-.bs-nav
-{
+.clear {
+  clear: both;
+}
+body .container .intro-section .span4 .description {
+  padding: 10px;
+  color: white;
+  margin-top: 50px;
+}
+
+
+body .container .intro-section {
+  margin-left: -20px;
+  margin-right: -20px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+body .container .intro-section .span8 {
+  text-align: center;
+}
+
+body .container .intro-section#intro-shanbay-words {
+    background-color: #68c39f;
+}
+
+[class*="span"] {
+    float: left;
+    min-height: 1px;
+    margin-left: 30px;
+  }
+
+body .container .intro-section .span4 {
+  float: right;
+}
+
+body .container .intro-section .span4 img {
+  float: right;
+  cursor: pointer;
+}
+body .container .intro-section .span4 .description {
+  padding: 10px;
+  color: white;
+  margin-top: 50px;
+}
+body .container .intro-section .span4 .description h2 {
+  font-size: 40px;
+}
+body .container .intro-section .span4 .description ul {
+  list-style: none;
+  margin: 0;
+  margin-top: 20px;
+  font-size: 20px;
+}
+body .container .intro-section .span4 .description ul li {
+  line-height: 2em;
+}
+
+.bs-nav {
     background-color: #209e85;
     margin-bottom: 0px;
 }
 
-.bs-nav a, .ba-nav li{
+.bs-nav a, .ba-nav li {
     color: #c9e6e0 !important;
     margin-left: 10px;
     font-size: 16px;
 }
 
-.bs-alert{
-	margin-top: 15px
+.bs-alert {
+    margin-top: 15px
 }
-.navbar-header
-{
+
+.navbar-header {
     width: 100px;
     margin-top: 5px;
     margin-left: 0;
 }
 
-.bs-logo img
-{
+.bs-logo img {
     max-width: 100%;
     width: auto;
     height: auto;
     vertical-align: middle;
 }
 
-main
-{
+main {
     background-color: rgb(238, 238, 238);
     min-height: 1000px;
 }
 
-.card
-{
+.card {
     width: 100%;
     box-shadow: #CCC 2px 2px 8px;
     border-radius: 10px;
-    overflow:hidden;
+    overflow: hidden;
 }
 
-.card .plan
-{
+.card .plan {
     background-color: white;
     min-height: 108px;
     text-align: center;
     vertical-align: middle;
 }
 
-.plan p
-{
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+.plan p {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 35px;
     word-wrap: break-word;
     line-height: 100px;
 }
 
-.plan a{
+.plan a {
     position: relative;
     float: right;
 }
 
-.speed
-{
+.speed {
     background-color: rgb(238, 238, 238);
     min-height: 158px;
     text-align: center;
     vertical-align: middle;
 }
 
-.speed .row
-{
-    margin:10px;
+.speed .row {
+    margin: 10px;
     min-height: 60px;
     line-height: 60px;
 }
 
-.bs-num
-{
+.bs-num {
     font-size: 35px;
     font-weight: bold;
     color: #209e85;
 }
 
-.bs-text
-{
+.bs-text {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     color: #333;
 }
 
-hr{
+hr {
     margin: 18px;
     border-top: 1px solid #ccc;
 }
 
-.bs-go
-{
+.bs-go {
     line-height: 30px;
     color: #7c8a8a;
     font-size: 20px;
     text-align: center;
 }
 
-.bs-mean ul
-{
-	color: #666666;
-	line-height: 50px;
-	padding: 0px;
-	margin: 0px;
+.bs-mean ul {
+    color: #666666;
+    line-height: 50px;
+    padding: 0px;
+    margin: 0px;
 }
 
-.bs-mean ul li:hover{
-	float:left;
-	list-style:none; /* 将默认的列表符号去掉 */
-	margin:0px; /* 将默认的外边距去掉 */
-	margin-right: 10px;
-	padding:0px 10px;
-	line-height: 50px;
-	border-bottom: solid 2px #333333;
+.bs-mean ul li:hover {
+    float: left;
+    list-style: none; /* 将默认的列表符号去掉 */
+    margin: 0px; /* 将默认的外边距去掉 */
+    margin-right: 10px;
+    padding: 0px 10px;
+    line-height: 50px;
+    border-bottom: solid 2px #333333;
 }
 
-.bs-mean ul li
-{
-	float:left;
-	list-style:none; /* 将默认的列表符号去掉 */
-	margin:0px; /* 将默认的外边距去掉 */
-	margin-right: 10px;
-	padding:0px 10px;
-	line-height: 50px;
+.bs-mean ul li {
+    float: left;
+    list-style: none; /* 将默认的列表符号去掉 */
+    margin: 0px; /* 将默认的外边距去掉 */
+    margin-right: 10px;
+    padding: 0px 10px;
+    line-height: 50px;
 
 }
 
-.bs-mean span
-{
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 15px;
+.bs-mean span {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
 }
 
-.bs-mean
-{
-	margin: 0px;
-	padding: 0px;
-	min-height: 52px;
-	vertical-align: middle;
+.bs-mean {
+    margin: 0px;
+    padding: 0px;
+    min-height: 52px;
+    vertical-align: middle;
 }
 
-
-.bs-study
-{
-	min-height: 500px;
-	background-color: #ffffff;
+.bs-study {
+    min-height: 500px;
+    background-color: #ffffff;
 }
 
-.bs-center{
-	text-align: center;
+.bs-center {
+    text-align: center;
 }
 
-.bs-title
-{
-	margin: 30px;
-	color: #209E85;
+.bs-title {
+    margin: 30px;
+    color: #209E85;
 }
 
-.bs-title p
-{
-	font-weight: bold;
-	line-height: 80px;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 30px;
+.bs-title p {
+    font-weight: bold;
+    line-height: 80px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 30px;
 }
 
-.bs-word-card
-{
-	background-color: rgb(238, 238, 238);
-	min-height: 200px;
-	padding: 50px;
+.bs-word-card {
+    background-color: rgb(238, 238, 238);
+    min-height: 200px;
+    padding: 50px;
 }
 
-.new-word,.day-word
-{
-	float: left;
-	min-height: 50px;
-	margin-left: 30px;
+.new-word, .day-word {
+    float: left;
+    min-height: 50px;
+    margin-left: 30px;
 }
 
-.study-btn
-{
-	float: right;
-	margin-top: 20px;
+.study-btn {
+    float: right;
+    margin-top: 20px;
 }
 
-.bs-num
-{
-	font-weight: bold;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 50px;
-	margin: 0px;
+.bs-num {
+    font-weight: bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 50px;
+    margin: 0px;
 }
 
-.bs-txt
-{
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 20px;
+.bs-txt {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 20px;
 }
 
-.study-btn button
-{
-	width: 200px;
-	height: 50px;
-	color: #ffffff;
-	background-color: rgb(56, 194, 168);
+.study-btn button {
+    width: 200px;
+    height: 50px;
+    color: #ffffff;
+    background-color: rgb(56, 194, 168);
 }
 
-.bs-word-know, .bs-word-detail{
-	padding: 40px;
+.bs-word-know, .bs-word-detail {
+    padding: 40px;
 }
 
-.bs-word-detail .row
-{
-	margin: 20px;
+.bs-word-detail .row {
+    margin: 20px;
 }
 
-.bs-word-detail .col-md-2>span
-{
-	float: right;
-	font-weight: bold;
+.bs-word-detail .col-md-2 > span {
+    float: right;
+    font-weight: bold;
 }
 
-.bs-word-explain
-{
-	height: auto;
-	padding: 15px;
-	font-size: 16px;
+.bs-word-explain {
+    height: auto;
+    padding: 15px;
+    font-size: 16px;
 }
 
-.bs-word-sentence
-{
-	font-size: 20px;
+.bs-word-sentence {
+    font-size: 20px;
 }
 
-.bs-know-table tr
-{
-	height: 50px;
+.bs-know-table tr {
+    height: 50px;
 }
 
-.bs-know-table tr:hover
-{
-	background-color: #209E85;
-	color: #FFFFFF;
+.bs-know-table tr:hover {
+    background-color: #209E85;
+    color: #FFFFFF;
 }
 
-.bs-know-table td{
-	line-height: 30px !important;
+.bs-know-table td {
+    line-height: 30px !important;
 }
 
-.bs-know-td
-{
-	border: 1px solid #DDD;
-	width: 10%;
-	font: "微软雅黑";
-	font-weight: bold;
-	text-align: center;
+.bs-know-td {
+    border: 1px solid #DDD;
+    width: 10%;
+    font: "微软雅黑";
+    font-weight: bold;
+    text-align: center;
 }
 
-.bs-know-tdt
-{
-	border: 1px solid #DDD;
+.bs-know-tdt {
+    border: 1px solid #DDD;
 }
 
-.bs-word
-{
-	font: "微软雅黑";
-	font-size: 40px;
+.bs-word {
+    font: "微软雅黑";
+    font-size: 40px;
 }
 
-.bs-symbol
-{
-	color:rgb(238, 238, 238);
-	margin: 10px;
-	font-size: 20px;
+.bs-symbol {
+    color: rgb(238, 238, 238);
+    margin: 10px;
+    font-size: 20px;
 }
 
-.bs-voice{
-	color:#000000 ;
-	margin: 10px;
-	font-size: 20px;
+.bs-voice {
+    color: #000000;
+    margin: 10px;
+    font-size: 20px;
 }
 
-.bs-note
-{
-	font-size: 16px;
+.bs-note {
+    font-size: 16px;
 }
 
-.bs-author
-{
-	font-size: 14px;
+.bs-author {
+    font-size: 14px;
 }
 
-.tab-content{
-	margin-top: 20px;
+.tab-content {
+    margin-top: 20px;
 }
 
-.next-word
-{
-	background: url(https://static.baydn.com/static/img/icons.png) no-repeat -256px -256px;
-	width: 96px;
-	height: 96px;
-	margin-top: 150px;
+.next-word {
+    background: url(https://static.baydn.com/static/img/icons.png) no-repeat -256px -256px;
+    width: 96px;
+    height: 96px;
+    margin-top: 150px;
 }
 
-.next-word:hover
-{
-	background: url(https://static.baydn.com/static/img/icons.png) no-repeat -256px -352px;
-	width: 96px;
-	height: 96px;
-	margin-top: 150px;
+.next-word:hover {
+    background: url(https://static.baydn.com/static/img/icons.png) no-repeat -256px -352px;
+    width: 96px;
+    height: 96px;
+    margin-top: 150px;
+}
+
+.span12 {
+    width: 1170px;
+}
+
+.span11 {
+    width: 1070px;
+}
+
+.span10 {
+    width: 970px;
+}
+
+.span9 {
+    width: 870px;
+}
+
+.span8 {
+    width: 770px;
+}
+
+.span7 {
+    width: 670px;
+}
+
+.span6 {
+    width: 570px;
+}
+
+.span5 {
+    width: 470px;
+}
+
+.span4 {
+    width: 370px;
+}
+
+.span3 {
+    width: 270px;
+}
+
+.span2 {
+    width: 170px;
+}
+
+.span1 {
+    width: 70px;
 }

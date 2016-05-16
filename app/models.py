@@ -96,7 +96,7 @@ class User(UserMixin, db.Model):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            if self.email == current_app.config['FLASKY_ADMIN']:
+            if self.email == current_app.config['SHANBAY_ADMIN']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
@@ -201,7 +201,11 @@ class User(UserMixin, db.Model):
         return True if UserWord.query.filter_by(user_id=self.id, last_time=date.today()).first() else False
 
     def init_words(self):
-        return Word.query.filter_by(rank=self.rank).order_by(func.random()).limit(self.word_totals).all()
+        first_words = Word.query.filter_by(rank=self.rank).order_by(func.random()).limit(self.word_totals).all()
+        self.words += first_words
+        db.session.add(self)
+        db.session.commit()
+        return self.words
 
     # 根据用户的难度和用户的单词量取新单词
     # 每日单词量的新词比为0.17
@@ -224,7 +228,6 @@ class User(UserMixin, db.Model):
         db.session.commit()
 
     def generate_today_words(self, proportion=0.17):
-        # 按比例抽取对单词掌握程度小于学习次数的单词列表
         today_old_words = []
         today_new_words = []
         cu_new_word_totals = int(self.word_totals * proportion)
@@ -279,7 +282,7 @@ class UserWord(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     word_id = db.Column(db.Integer, db.ForeignKey('words.id'), primary_key=True)
     level = db.Column(db.Integer, default=0, index=True)
-    last_time = db.Column(db.Date(), default=date(2013, 1, 1))
+    last_time = db.Column(db.Date(), default=date.today())
     # bidirectional attribute/collection of "user"/"user_words"
     user = db.relationship(User, backref=orm.backref("user_words", cascade="all, delete-orphan"))
     # reference to the "Word" object
@@ -290,6 +293,9 @@ class UserWord(db.Model):
         self.user = user
         self.word = word
         self.level = level
+    #
+    # def __init__(self, **kwargs):
+    #     super(UserWord, self).__init__(**kwargs)
 
     def update_level(self):
         self.level += 1

@@ -14,7 +14,6 @@ class Config:
     SHANBAY_MAIL_SUBJECT_PREFIX = '[XzAmrzs]'
     SHANBAY_MAIL_SENDER = 'Receive from <' + MAIL_USERNAME + '>'
     SHANBAY_ADMIN = os.environ.get('SHANBAY_ADMIN') or 'soft1305@163.com'
-
     @staticmethod
     def init_app(app):
         pass
