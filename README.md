@@ -32,7 +32,10 @@ Install the requirements
 ```
 Init database
 ```
-(venv)$ python manage.py db upgrade
+(venv)$ python .\manage.py shell
+>>>Word.generate_fake()
+....
+>>>exit()
 ```
 Run
 ```
