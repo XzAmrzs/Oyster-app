@@ -45,7 +45,7 @@ Run
 (venv)$ python manage.py runserver
 ```
 
-默认用户:test 密码:test
+默认用户:test@shanbay.com 密码:test
 
 **TODO LIST**：
 
