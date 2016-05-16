@@ -32,8 +32,7 @@ Install the requirements
 ```
 Init database
 ```
-(venv)$ python manage.py shell
-(venv)$ db.create_all()
+(venv)$ python manage.py db upgrade
 ```
 Run
 ```
