@@ -28,11 +28,14 @@ $ source venv/bin/activate
 Install the requirements
 ```
 (venv)$ cd requirements 
-(venv)$ pip install -r dev.text   
+(venv)$ pip install -r dev.text
+(venv)$ cd ..   
 ```
 Init database
 ```
 (venv)$ python .\manage.py shell
+>>>db.create_all()
+>>>User.generate_fake()
 >>>Word.generate_fake()
 ....
 >>>exit()
@@ -41,6 +44,8 @@ Run
 ```
 (venv)$ python manage.py runserver
 ```
+
+默认用户:test 密码:test
 
 **TODO LIST**：
 
@@ -79,3 +84,4 @@ Run
     
 **缺点**:
 1. 每日单词一次请求过多会造成一开始加载单词变的很慢，修改成10个左右可满足响应速度
+2. 邮箱使用的是我们班的公共邮箱，所以可能收不到邮件，使用的时候可以换成你自己的

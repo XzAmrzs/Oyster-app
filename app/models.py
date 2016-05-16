@@ -93,6 +93,28 @@ class User(UserMixin, db.Model):
     # association proxy of "user_word" collection to "word" attribute
     words = association_proxy('user_words', 'word')
 
+    @staticmethod
+    def generate_fake(count=1):
+        from sqlalchemy.exc import IntegrityError
+        from random import seed
+        import forgery_py
+
+        seed()
+        for i in range(count):
+            u = User(email='test',
+                     username=forgery_py.internet.user_name(True),
+                     password='test',
+                     confirmed=True,
+                     name=forgery_py.name.full_name(),
+                     location=forgery_py.address.city(),
+                     about_me=forgery_py.lorem_ipsum.sentence(),
+                     member_since=forgery_py.date.date(True))
+            db.session.add(u)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
