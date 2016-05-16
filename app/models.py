@@ -10,12 +10,13 @@ from flask import current_app, request, url_for
 from flask.ext.login import UserMixin, AnonymousUserMixin, current_user
 
 # from app.api_1_0.users import get_user_word_notes
+from app.exceptions import ValidationError
 from . import db, login_manager
 
 
 class Permission:
     FOLLOW = 0x01
-    COMMENT = 0x02
+    NOTE = 0x02
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
     ADMINISTER = 0x80
@@ -38,10 +39,10 @@ class Role(db.Model):
     def insert_roles():
         roles = {
             'User': (Permission.FOLLOW |
-                     Permission.COMMENT |
+                     Permission.NOTE |
                      Permission.WRITE_ARTICLES, True),
             'Moderator': (Permission.FOLLOW |
-                          Permission.COMMENT |
+                          Permission.NOTE |
                           Permission.WRITE_ARTICLES |
                           Permission.MODERATE_COMMENTS, False),
             'Administrator': (0xff, False)
@@ -95,7 +96,7 @@ class User(UserMixin, db.Model):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            if self.email == current_app.config['SHANBAY_ADMIN']:
+            if self.email == current_app.config['FLASKY_ADMIN']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
@@ -197,7 +198,7 @@ class User(UserMixin, db.Model):
         return (date.today() - self.last_checkin).days == 0
 
     def is_have_today_words(self):
-        return True if UserWord.query.filter_by(user_id=self.id, last_time=date.today()).first() else True
+        return True if UserWord.query.filter_by(user_id=self.id, last_time=date.today()).first() else False
 
     def init_words(self):
         return Word.query.filter_by(rank=self.rank).order_by(func.random()).limit(self.word_totals).all()
@@ -254,6 +255,14 @@ class User(UserMixin, db.Model):
         today_new_words = [x.word for x in self.user_words if x.last_time == date.today() and x.level == 0]
         return today_new_words
 
+    def checkin(self):
+        self.last_checkin = date.today()
+        today_words = UserWord.get_user_today_words(self.id)
+        for today_word in today_words:
+            if today_word.last_time == date.today():
+                today_word.update_level()
+                db.session.add(today_word)
+
     def to_json(self):
         json_user = {
             'id': self.id,
@@ -282,14 +291,21 @@ class UserWord(db.Model):
         self.word = word
         self.level = level
 
+    def update_level(self):
+        self.level += 1
+
+    @staticmethod
+    def get_user_today_words(user_id):
+        return UserWord.query.filter_by(user_id=user_id, last_time=date.today()).all()
+
 
 class Word(db.Model):
     __tablename__ = 'words'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(64), unique=True, index=True)
-    rank = db.Column(db.Integer, index=True)
-    USA_voice = db.Column(db.TEXT(), unique=True)
-    UK_voice = db.Column(db.TEXT(), unique=True)
+    rank = db.Column(db.Integer, index=True, default=0)
+    USA_voice = db.Column(db.TEXT())
+    UK_voice = db.Column(db.TEXT())
     eg = db.Column(db.Text())
     translations = db.Column(db.Text())
     phonetic_symbol = db.Column(db.String(128))
@@ -300,8 +316,28 @@ class Word(db.Model):
 
     # 同义词功能还没有想好要怎么实现
     # synonym = db.Column(db.Text())
-    def __init__(self, content):
-        self.content = content
+
+    @staticmethod
+    def generate_fake(count=100):
+        from random import seed, randint
+        import forgery_py
+
+        seed()
+        for i in range(count):
+            w = Word(content=forgery_py.lorem_ipsum.word(),
+                     eg=forgery_py.lorem_ipsum.sentence(),
+                     rank=randint(0, 3),
+                     USA_voice=forgery_py.basic.text(spaces=False),
+                     UK_voice=forgery_py.basic.text(spaces=False),
+                     translations=forgery_py.lorem_ipsum.sentence(),
+                     phonetic_symbol='[' + forgery_py.lorem_ipsum.word() + ']'
+                     )
+            if not w.query.filter_by(content=w.content).first():
+                db.session.add(w)
+                db.session.commit()
+
+    def __init__(self, **kwargs):
+        super(Word, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<words %r>' % self.content
@@ -342,6 +378,13 @@ class Note(db.Model):
             'author': self.author.to_json(),
         }
         return json_note
+
+    @staticmethod
+    def from_json(json_note):
+        body = json_note.get('body')
+        if body is None or body == '':
+            raise ValidationError('note does not have a body')
+        return Note(body=body)
 
 
 class AnonymousUser(AnonymousUserMixin):

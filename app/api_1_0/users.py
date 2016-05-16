@@ -1,5 +1,10 @@
 # coding=utf-8
-from flask import jsonify, request, current_app, url_for
+import json
+
+from flask import jsonify, request, current_app, url_for, g
+
+from .. import db
+from .errors import bad_request
 from . import api
 from ..models import User, Note, UserWord
 
@@ -36,14 +41,20 @@ def get_user_notes(id):
     })
 
 
-# @api.route('/users/<int:id>', methods=['PUT'])
-# # 这个路由需要加入什么权限管理?
-# @permission_required(这个参数应该是客户端传过来一个)
-# def edit_user(id):
-#     user = User.query.get_or_404(id)
-#     if g.current_user != user and \
-#             not g.current_user.can(Permission.ADMINISTER):
-#         return forbidden('Insufficient permissions')
-#     post.body = request.json.get('body', post.body)
-#     db.session.add(post)
-#     return jsonify(post.to_json())
+@api.route('/users/<int:id>/checkin/', methods=['POST'])
+def edit_user_checkin(id):
+    user = User.query.get_or_404(id)
+    words = request.json.get('words')
+    flag = True
+    for word in words:
+        if not word['processed']:
+            flag = False
+    if flag:
+        user.checkin()
+        db.session.add(user)
+        db.session.commit()
+    else:
+        return bad_request('not all processed')
+    return jsonify(user.to_json()), 201, \
+           {'Location': url_for('api.get_user', id=user.id,
+                                _external=True)}

@@ -2,5 +2,19 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% block title %}扇贝网，英语听说读写和词汇，我们都能帮到你 扇贝英语{% endblock %}
 {% block page_content %}
-{{ super() }}
+    {{ super() }}
+    {#  bs-word-checkin样式还没定义  #}
+    {% if current_user.is_checkin() %}
+        <div class="col-md-10 bs-center bs-word-checkin">
+            <div class="row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-8">
+                    <p>这里可以放置“再学20个”</p>
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

@@ -1,6 +1,9 @@
+# coding=utf-8
 from flask import jsonify, request, g, abort, url_for, current_app
+from flask.ext.login import current_user
+
 from .. import db
-from ..models import Note, Permission
+from ..models import Note, Permission, Word
 from . import api
 from .decorators import permission_required
 from .errors import forbidden
@@ -54,3 +57,19 @@ def edit_note(id):
     note.body = request.json.get('body', note.body)
     db.session.add(note)
     return jsonify(note.to_json())
+
+
+@api.route('/words/<int:id>/notes/', methods=['POST'])
+# @permission_required(Permission.NOTE)
+def new_word_note(id):
+    word = Word.query.get_or_404(id)
+    note = Note.from_json(request.json)
+    # 直接用g有点小问题，除非整个全是前后端分离才可
+    # note.author = g.current_user
+    note.author = current_user
+    note.word = word
+    db.session.add(note)
+    db.session.commit()
+    return jsonify(note.to_json()), 201, \
+           {'Location': url_for('api.get_note', id=note.id,
+                                _external=True)}

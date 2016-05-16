@@ -1,9 +1,11 @@
 {#{% extends "bdc/bdc.html" %}#}
-{#{% block title %}扇贝网，英语听说读写和词汇，我们都能帮到你 扇贝英语{% endblock %}#}
+{#{% block title %}{% endblock %}#}
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>CourseGrade</title>
+    <title>扇贝网，英语听说读写和词汇，我们都能帮到你 扇贝英语</title>
+     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.3.min.js"></script>
     <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
@@ -12,40 +14,61 @@
 <body>
 <nav class="navbar navbar-default bs-nav">
     <div class="container">
-
-        <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <a class="bs-logo" href="#">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="bs-logo" href="{{ url_for('main.index') }}">
                 <img src="https://static.baydn.com/static/img/logo_v4.png">
             </a>
         </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="#">背单词</a></li>
+                <li><a href="{{ url_for('main.index') }}">首页</a></li>
+                <li><a href="{{ url_for('bdc.bdc_review') }}">背单词</a></li>
                 <li><a href="#">炼句</a></li>
                 <li><a href="#">听力</a></li>
                 <li><a href="#">阅读</a></li>
                 <li><a href="#">小组</a></li>
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">登陆</a></li>
-                <li><a href="#">注册</a></li>
+                {% if current_user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="{{ current_user.gravatar(size=18) }}">
+                            Account <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('main.user', username=current_user.username) }}">设置</a></li>
+                            <li><a href="{{ url_for('auth.change_password') }}">修改密码</a></li>
+                            <li><a href="{{ url_for('auth.change_email_request') }}">修改电子邮件</a></li>
+                            <li><a href="{{ url_for('auth.logout') }}">注销</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('auth.login') }}">登陆</a></li>
+                {% endif %}
             </ul>
         </div>
-        <!-- /.navbar-collapse -->
     </div>
-    <!-- /.container-fluid -->
 </nav>
 <main>
     <div class="container bs-container">
-        <div class="bs-mean">
-            <ul>
-                <li><a href="{{ url_for('bdc.bdc_review') }}">单词学习</a></li>
-                <li><a href="{{ url_for('bdc.bdc_settings') }}">单词设置</a></li>
-            </ul>
-        </div>
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning bs-alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+        <ul class="nav nav-pills bs-pill">
+            <li role="presentation"><a href="{{ url_for('bdc.bdc_review') }}">单词学习</a></li>
+            <li role="presentation"><a href="{{ url_for('bdc.bdc_settings') }}">单词设置</a></li>
+        </ul>
         <div class="bs-study">
             <div class="row">
                 <div class="col-md-1"></div>
@@ -81,14 +104,29 @@
                         </div>
                         <div class="col-md-8">
                             <table class="table bs-know-table">
+                                <tr id="eg" style="display: none">
+                                    <td class="bs-word-eg"></td>
+                                </tr>
+                                <tr id="translations" style="display: none">
+                                    <td class="bs-word-translations"></td>
+                                </tr>
                                 <tr id="know">
                                     <td class="bs-know-td">1.</td>
                                     <td class="bs-know-tdt">认识</td>
                                 </tr>
-                                <tr>
+                                <tr id="unknow">
                                     <td class="bs-know-td">2.</td>
                                     <td class="bs-know-tdt">不认识</td>
                                 </tr>
+                                <tr id="remember" style="display: none;">
+                                    <td class="bs-know-td">1.</td>
+                                    <td class="bs-know-tdt">想起来了</td>
+                                </tr>
+                                <tr id="unremember" style="display: none;">
+                                    <td class="bs-know-td">2.</td>
+                                    <td class="bs-know-tdt">没想起来</td>
+                                </tr>
+
                             </table>
                         </div>
                         <div class="col-md-2">
@@ -110,7 +148,8 @@
                             <span>单词解释</span>
                         </div>
                         <div class="col-md-10">
-                            <input class="form-control bs-word-explain" type="text" value="" readonly id="word-explain">
+                            <input class="form-control bs-word-explain" type="text" value="" readonly
+                                   id="word-explain">
                         </div>
                     </div>
                     <div class="row">
@@ -133,7 +172,6 @@
                                 <li><a id="shared-notes" href="#share" data-toggle="tab">共享笔记</a></li>
                                 <li><a href="#create" data-toggle="tab">创建笔记</a></li>
                             </ul>
-
                             <div class="tab-content">
                                 <div class="tab-pane fade in active" id="mine">
                                     <ol id="user-note">
@@ -145,10 +183,12 @@
                                 </div>
                                 <div class="tab-pane fade" id="create">
                                     <form class="form">
-                                        <div class="form-group"><textarea class="form-control" rows="3"
+                                        <div class="form-group"><textarea id="add-note-text" class="form-control"
+                                                                          rows="3"
                                                                           style="resize:none"></textarea>
                                         </div>
-                                        <div class="form-group"><input class="btn btn-default" type="button"
+                                        <div class="form-group"><input id="add-note-input" class="btn btn-default"
+                                                                       type="button"
                                                                        value="添加"/></div>
                                     </form>
                                 </div>
@@ -163,29 +203,20 @@
                 <div class="col-md-1" id="ibox">
                 </div>
 
-                <div class="col-md-10 bs-center bs-word-checkin" style="display: none;">
-                    <div class="row">
-                        <div class="col-md-2">
-                        </div>
-                        <div class="col-md-8">
-                            <p>完成打卡</p>
-                        </div>
-                        <div class="col-md-2">
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
         </div>
     </div>
 </main>
-</body>
 <script>
     var words = [];
     var word = null;
     var num = 1;
     $(document).ready(function () {
         $("button#study").click(function () {
+            $("div#index").css("display", "none");
+            $("div.bs-word-know").css("display", "block");
             $.getJSON('/api/v1.0/users/{{ current_user.id }}/today-words', {}, function (data) {
                         words = data.words;
                         word = words[0];
@@ -193,9 +224,9 @@
                         $("span#word-content").text(word.content);
                         $("span#word-voice").text(word.UK_voice);
                         $("span#word-symbol").text(word.phonetic_symbol);
+
                         $("#word-explain").attr("value", word.translations);
-                        $("#word-eg").text(word.eg);
-                        {#<span class="bs-word">for instance</span>#}
+                        $("p#word-eg").text(word.eg);
                         var notes = word.user_notes;
                         for (var i = 0; i < notes.length; i++) {
                             var append_item = "<li>" + notes[i].body + "</li>";
@@ -204,18 +235,56 @@
                         $("ol#shared-notes-ol").html("");
                     }
             );
-            $("div#index").css("display", "none");
-            $("div.bs-word-know").css("display", "block");
-        });
 
+        });
+        $("#add-note-input").click(function () {
+            var post_url = "/api/v1.0/words/" + word.id + "/notes/";
+            $.ajax({
+                  type: "POST",
+                  contentType: "application/json; charset=utf-8",
+                  url: post_url,
+                  data: JSON.stringify({body: $("#add-note-text").val()}),
+                  success: function (data) {
+                      $("#add-note-text").val(null);
+                      var append_item = "<li>" + data.body + "</li>";
+                      $("ol#user-note").append(append_item);
+                      alert("添加成功")
+                  },
+                  dataType: "json"
+                });
+        });
         $("tr#know").click(function () {
+            word.processed=true;
             $("div.bs-word-know").css("display", "none");
             $("div#ibox").css("display", "none");
             $("div.bs-word-detail").css("display", "block");
             $("div#rightbox").css("display", "block");
+            $("#eg").css("display", "none");
+            $("#translations").css("display", "none");
+        });
+
+        $("tr#unknow").click(function () {
+            $("#eg").css("display", "block");
+            $("#know").css("display", "none");
+            $("#unknow").css("display", "none");
+            $("#remember").css("display", "block");
+            $("#unremember").css("display", "block");
+
+        });
+        $("tr#remember").click(function () {
+            $("#eg").css("display", "block");
+            $("div.bs-word-know").css("display", "none");
+            $("div.bs-word-remember").css("display", "none");
+            $("div#ibox").css("display", "none");
+            $("div.bs-word-detail").css("display", "block");
+            $("div#rightbox").css("display", "block");
+            $("#eg").css("display", "none");
+            $("#translations").css("display", "none");
+        });
+        $("tr#unremember").click(function () {
+            $("#translations").css("display", "block");
         });
         $("a#shared-notes").click(function () {
-            {#     此处需要判断当前页面的是否已经有了列表项，有的话就停止获取      #}
             if (!$("ol#shared-notes-ol").text()) {
                 var json_url = "/api/v1.0/words/" + word.id + "/notes";
                 $.getJSON(json_url, {}, function (data) {
@@ -237,27 +306,39 @@
                 $("span#word-content").text(word.content);
                 $("span#word-voice").text(word.UK_voice);
                 $("span#word-symbol").text(word.phonetic_symbol);
-                $("#word-explain").attr("value", words[0].translations);
-                $("#word-eg").text(words.eg);
+                $("#word-explain").attr("value", word.translations);
+                $("p#word-eg").text(word.eg);
                 $("ol#user-note li").remove();
                 var notes = word.user_notes;
                 for (var i = 0; i < notes.length; i++) {
                     var append_item = "<li>" + notes[i].body + "</li>";
                     $("ol#user-note").append(append_item);
                 }
-                {#        清空下一个的笔记        #}
                 $("ol#shared-notes-ol li").remove();
 
+                $("div#index").css("display", "none");
+            $("div#ibox").css("display", "none");
+            $("div.bs-word-know").css("display", "block");
+            $("div.bs-word-detail").css("display", "none");
+            $("div#rightbox").css("display", "none");
             }
             else {
-                $("div.bs-word-know").css("display", "none");
-                $("div#ibox").css("display", "none");
-                $("div.bs-word-detail").css("display", "none");
-                $("div#rightbox").css("display", "none");
-                $("div.bs-word-checkin").css("display", "block");
+                var post_url = "/api/v1.0/users/"+ {{ current_user.id }}+"/checkin/";
+            $.ajax({
+                  type: "POST",
+                  contentType: "application/json; charset=utf-8",
+                  url: post_url,
+                  data: JSON.stringify({words: words}),
+                  success: function (data) {
+                      alert("打卡完成")
+                  },
+                  dataType: "json"
+                });
+{#                $("div.bs-word-checkin").css("display", "block");#}
+                window.location.reload()
             }
-
         });
     });
 </script>
+</body>
 </html>

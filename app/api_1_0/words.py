@@ -1,7 +1,4 @@
 from flask import jsonify, request, current_app, url_for
-from flask.ext.login import current_user
-
-from app.api_1_0.users import get_user_word_notes
 from . import api
 from ..models import Word
 
