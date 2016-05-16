@@ -30,20 +30,22 @@ def bdc_review():
                            new_words_totals=new_words_totals)
 
 
-@bdc.route('/bdc/settings', methods=['GET', 'POST'])
+@bdc.route('/settings', methods=['GET', 'POST'])
 @login_required
 def bdc_settings():
     form = BDCSettingsForm()
     if form.validate_on_submit():
+        print current_user
         current_user.word_totals = form.word_totals.data
         current_user.rank = form.rank.data
         current_user.level = form.level.data
-        current_user.auto_voice = form.auto_voice
+        current_user.auto_voice = form.auto_voice.data
         db.session.add(current_user)
         flash('Your vocabulary settings has been updated.')
-        return redirect(url_for('.user', username=current_user.username))
+        return redirect(url_for('bdc.bdc_settings'))
     form.word_totals.data = current_user.word_totals
     form.rank.data = current_user.rank
     form.level.data = current_user.level
     form.auto_voice.data = current_user.auto_voice
     return render_template('bdc/bdc_settings.html', form=form)
+
