@@ -101,7 +101,7 @@ class User(UserMixin, db.Model):
 
         seed()
         for i in range(count):
-            u = User(email='test',
+            u = User(email='test@shanbay.com',
                      username=forgery_py.internet.user_name(True),
                      password='test',
                      confirmed=True,
