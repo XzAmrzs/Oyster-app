@@ -2,8 +2,6 @@
 =================
 `python2`,`Flask`,`Bootstrap`
 
-This repository contains the source code for my shanbay interview using `Flask` + `bootstrap`
-
 1. 用户可以根据自己的英语水平，例如 四级，六级，雅思，和托福 来设置自己背单词的范围；
 2. 每个用户可以设置每天背多少单词
 3. 用户背单词过程中能够添加笔记， 也可以查看其他用户共享的笔记
@@ -42,9 +40,9 @@ Run
 (venv)$ python manage.py runserver
 ```
 
-默认用户:test@shanbay.com 密码:test
+默认用户:test@oyster.com 密码:test
 
-**TODO LIST**：
+**已做**：
 
 - [x] 用户信息设置
     - [x] 电子邮件设置
@@ -63,7 +61,6 @@ Run
     - [x] 查看解释
     - [x] 查看例句
     - [x] 查看发音
-    - [ ] 查看同义词(两个)
 - [x] 笔记功能
     - [x] 我的笔记
     - [x] 添加笔记
@@ -80,6 +77,8 @@ Run
     - [x] 完成打卡的postJson
     
 **待做改善**:
+
+- [ ] 查看同义词(两个)
 
 1. 每日单词一次请求过多会造成一开始加载单词变的很慢，修改成10个左右可满足响应速度
 2. 邮箱使用的是我们班的公共邮箱，所以可能收不到邮件，使用的时候可以换成你自己的

@@ -76,7 +76,7 @@ class User(UserMixin, db.Model):
     # 上次完成任务
     last_checkin = db.Column(db.Date(), default=date(2013, 1, 1))
     avatar_hash = db.Column(db.String(32))
-    # shanbay修改
+    # oyster修改
     timezone = db.Column(db.String(32))
     # 难度
     rank = db.Column(db.Integer, default=0)
@@ -101,7 +101,7 @@ class User(UserMixin, db.Model):
 
         seed()
         for i in range(count):
-            u = User(email='test@shanbay.com',
+            u = User(email='test@oyster.com',
                      username=forgery_py.internet.user_name(True),
                      password='test',
                      confirmed=True,

@@ -1,6 +1,6 @@
 Dear {{ user.username }},
 
-Welcome to Shanbay!
+Welcome to Oyster!
 
 To confirm your account please click on the following link:
 
@@ -8,6 +8,6 @@ To confirm your account please click on the following link:
 
 Sincerely,
 
-The Shanbay Team
+The Oyster Team
 
 Note: replies to this email address are not monitored.
