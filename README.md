@@ -43,7 +43,7 @@ Run
 (venv)$ python manage.py runserver
 ```
 
-默认用户:test@oyster.com 密码:test
+**默认用户:test@oyster.com 密码:test**
 
 **已做**：
 
