@@ -81,15 +81,15 @@ Run
 
 **效果预览:**
 
-!(主页)[http://7xox9y.com1.z0.glb.clouddn.com/oyster1.png]
+![主页](http://7xox9y.com1.z0.glb.clouddn.com/oyster1.png)
 
-!(登陆)[http://7xox9y.com1.z0.glb.clouddn.com/oyster2.png]
+![登陆](http://7xox9y.com1.z0.glb.clouddn.com/oyster2.png)
 
-!(背单词1)[http://7xox9y.com1.z0.glb.clouddn.com/oyster3.png]
+![背单词1](http://7xox9y.com1.z0.glb.clouddn.com/oyster3.png)
 
-!(背单词2)[http://7xox9y.com1.z0.glb.clouddn.com/oyster4.png]
+![背单词2](http://7xox9y.com1.z0.glb.clouddn.com/oyster4.png)
 
-!(单词详细)[http://7xox9y.com1.z0.glb.clouddn.com/oyster5.png]
+![单词详细](http://7xox9y.com1.z0.glb.clouddn.com/oyster5.png)
 
 
 **待做改善**:
