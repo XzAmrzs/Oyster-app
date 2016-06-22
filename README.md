@@ -77,12 +77,18 @@ Run
     - [x] 每日单词的getJSON
     - [x] 完成打卡的postJson
 
-效果预览:
-!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster1.png]
-!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster2.png]
-!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster3.png]
-!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster4.png]
-!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster5.png]
+**效果预览:**
+
+!(主页)[http://7xox9y.com1.z0.glb.clouddn.com/oyster1.png]
+
+!(登陆)[http://7xox9y.com1.z0.glb.clouddn.com/oyster2.png]
+
+!(背单词1)[http://7xox9y.com1.z0.glb.clouddn.com/oyster3.png]
+
+!(背单词2)[http://7xox9y.com1.z0.glb.clouddn.com/oyster4.png]
+
+!(单词详细)[http://7xox9y.com1.z0.glb.clouddn.com/oyster5.png]
+
 
 **待做改善**:
 
