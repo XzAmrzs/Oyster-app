@@ -1,5 +1,6 @@
 牡蛎单词
 =================
+仿照扇贝单词写的牡蛎单词。如有侵权，请联系告知.
 `python2`,`Flask`,`Bootstrap`
 
 1. 用户可以根据自己的英语水平，例如 四级，六级，雅思，和托福 来设置自己背单词的范围；
@@ -75,7 +76,14 @@ Run
     - [x] REST-API权限设置
     - [x] 每日单词的getJSON
     - [x] 完成打卡的postJson
-    
+
+效果预览:
+!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster1.png]
+!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster2.png]
+!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster3.png]
+!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster4.png]
+!()[http://7xox9y.com1.z0.glb.clouddn.com/oyster5.png]
+
 **待做改善**:
 
 - [ ] 查看同义词(两个)
